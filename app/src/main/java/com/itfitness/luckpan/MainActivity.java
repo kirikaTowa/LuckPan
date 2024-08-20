@@ -12,7 +12,7 @@ import com.itfitness.luckpan.widget.LuckPanAnimEndCallBack;
 public class MainActivity extends AppCompatActivity {
     private LuckPan pan;
     private ImageView imgStart;
-    private String[] mItemStrs = {"123","撒大声道1","撒大声道2","撒旦说","撒大声道3","哥哥哥","对应效果","对应代码"};
+    private String[] mItemStrs = {"活动1","活动2","活动3","活动4","活动5","活动6","活动7","活动8"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
