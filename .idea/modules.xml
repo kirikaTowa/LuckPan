@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LuckPan.iml" filepath="$PROJECT_DIR$/LuckPan.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/LuckPan.iml" filepath="$PROJECT_DIR$/.idea/modules/LuckPan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LuckPan.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LuckPan.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LuckPan.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LuckPan.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LuckPan.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LuckPan.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/LuckPan.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/LuckPan.app.unitTest.iml" />
     </modules>
   </component>
 </project>

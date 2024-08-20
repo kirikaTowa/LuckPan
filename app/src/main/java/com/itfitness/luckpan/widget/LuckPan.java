@@ -73,6 +73,7 @@ public class LuckPan extends View {
         mPaintArc.setStyle(Paint.Style.FILL);
 
         mPaintItemStr = new Paint(Paint.ANTI_ALIAS_FLAG);
+        //设置文字颜色
         mPaintItemStr.setColor(Color.parseColor("#ED2F2F"));
         mPaintItemStr.setStrokeWidth(3);
         mPaintItemStr.setTextAlign(Paint.Align.CENTER);
@@ -97,6 +98,7 @@ public class LuckPan extends View {
     public void setLuckNumber(int luckNumber){
         mLuckNum = luckNumber;
     }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -136,7 +138,8 @@ public class LuckPan extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.translate(getWidth()/2,getHeight()/2);//画布中心点设置为（0，0）
+        //画布中心点设置为（0，0）
+        canvas.translate(getWidth()/2,getHeight()/2);
         canvas.rotate(-90-mOffsetAngle);
         drawPanItem(canvas);
         drawText(canvas);
@@ -152,6 +155,7 @@ public class LuckPan extends View {
     private void drawPanItem(Canvas canvas) {
         float startAng = 0;//扇形开始的角度
         for (int x = 1;x<= mItemStrs.length;x++){
+            //设置转盘颜色
             if(x%2 == 1){
                 //是奇数
                 mPaintArc.setColor(Color.WHITE);
