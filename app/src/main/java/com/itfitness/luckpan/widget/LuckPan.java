@@ -4,13 +4,18 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.itfitness.luckpan.R;
 
 import java.util.ArrayList;
 /**
@@ -48,6 +53,10 @@ public class LuckPan extends View {
     private ObjectAnimator objectAnimator;
     private LuckPanAnimEndCallBack luckPanAnimEndCallBack;
 
+    private Bitmap bitmap;
+    private Paint mPaint;
+
+
     public LuckPan(Context context) {
         this(context, null);
     }
@@ -70,6 +79,17 @@ public class LuckPan extends View {
         mPaintItemStr.setStrokeWidth(3);
         //在弧形绘制区居中
         mPaintItemStr.setTextAlign(Paint.Align.CENTER);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 2;
+        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_goods, options);
+
+//        Matrix matrix = new Matrix();
+//        //让图片转到正确角度，如果切图是横着的，可以调这个来实现效果
+//        matrix.postRotate(-90, bitmap.getWidth(), bitmap.getHeight());
+//        Bitmap rotateBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+//        bitmap.recycle();
+//        bitmap = rotateBitmap;
     }
 
     public void setItems(String[] items) {
@@ -94,7 +114,7 @@ public class LuckPan extends View {
         //创建一个 RectF 对象，用于定义转盘绘制的矩形区域。这个矩形以 (0, 0) 为中心，边界为 -mRadius 到 mRadius。
         rectFPan = new RectF(-mRadius, -mRadius, mRadius, mRadius);
         //创建一个用于绘制文本的矩形区域，其大小为转盘半径的 5/7，确保文本不溢出转盘边界
-        //!!!重要 决定文字位置，当然后后面那种缩放法也有效，只是比较麻烦
+        //TODO 决定文字位置，当然后后面那种缩放法也有效，只是比较麻烦
         rectFStr = new RectF(-mRadius / 10 * 5, -mRadius / 10 * 5, mRadius / 10 * 5, mRadius / 10 * 5);
         //计算每个项目所占的角度。360 度除以项目的数量，确保每个项目有相同的角度分布
         mItemAnge = 360 / mItemStrs.length;
@@ -130,10 +150,17 @@ public class LuckPan extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (mPaint == null) {
+            mPaint = new Paint();
+            mPaint.setStrokeWidth(5);
+            mPaint.setColor(Color.RED);
+            mPaint.setAntiAlias(true);
+        }
         canvas.translate(getWidth() / 2, getHeight() / 2);
         canvas.rotate(-90 - mOffsetAngle);
         drawPanItem(canvas);
         drawText(canvas);
+        drawBitmap(canvas);
     }
 
 
@@ -144,9 +171,11 @@ public class LuckPan extends View {
             mPaintArc.setColor(x % 2 == 0 ? Color.WHITE : Color.parseColor("#F8864A"));
             Path path = new Path();
             //addArc:传入矩形区域rectFStr画圆弧 ，起始角度 startAng 和扇形的角度 mItemAnge
+            //TODO 这个矩形的区域就是整个圆盘
+            canvas.drawArc(rectFPan, startAng, mItemAnge, true, mPaintArc);
+            //TODO 顺道处理文字轨迹
             path.addArc(rectFStr, startAng, mItemAnge);
             mArcPaths.add(path);
-            canvas.drawArc(rectFPan, startAng, mItemAnge, true, mPaintArc);
             //下一个起始角度更新
             startAng += mItemAnge;
         }
@@ -156,6 +185,37 @@ public class LuckPan extends View {
         for (int x = 0; x < mItemStrs.length; x++) {
             Path path = mArcPaths.get(x);
             canvas.drawTextOnPath(mItemStrs[x], path, 0, 0, mPaintItemStr);
+        }
+    }
+
+    private void drawBitmap(Canvas canvas) {
+// 位图的宽度和高度的一半
+        int bitmapWidthHalf = bitmap.getWidth() / 2;
+        int bitmapHeightHalf = bitmap.getHeight() / 2;
+
+        // 图片应该位于每个扇形的中心，距离圆心一个固定的距离
+        float imageRadius = mRadius * 0.75f; // 位图距离圆心的距离，可以根据需要调整
+
+        for (int x = 0; x < mItemStrs.length; x++) {
+            // 计算每个扇形的中心角度
+            float angle = mStartAngle + mItemAnge * x + mItemAnge / 2;
+
+            // 将角度转换为弧度
+            double radians = Math.toRadians(angle);
+
+            // 计算位图的中心点坐标
+            float centerX = (float) (imageRadius * Math.cos(radians));
+            float centerY = (float) (imageRadius * Math.sin(radians));
+
+            // 创建一个新的矩阵来处理位图的位置和旋转
+            Matrix matrix = new Matrix();
+            matrix.postTranslate(centerX - bitmapWidthHalf, centerY - bitmapHeightHalf);
+
+            // 旋转位图使其水平居中显示
+            matrix.postRotate(angle + 90, centerX, centerY); // 加90度以调整位图的初始旋转方向
+
+            // 在计算出的位置绘制位图
+            canvas.drawBitmap(bitmap, matrix, mPaint);
         }
     }
 
@@ -171,7 +231,7 @@ public class LuckPan extends View {
 //            Path outerPath = new Path(path);
 //            outerPath.addArc(rectFStr, 0, mItemAnge);
 //
-//            // 通过缩小路径实现文本的外移效果
+//            // todo 通过缩小路径实现文本的外移效果
 //            // 为了实际操作，我们需要拓展路径
 //            float scale = (mRadius + offsetPx) / mRadius; // 计算新半径的比例
 //            canvas.save();
