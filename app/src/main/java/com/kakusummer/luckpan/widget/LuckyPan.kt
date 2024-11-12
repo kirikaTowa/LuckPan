@@ -147,13 +147,13 @@ class LuckyPan @JvmOverloads constructor(
         //TODO 决定文字位置，当然后后面那种缩放法也有效，只是比较麻烦
         rectFStr = RectF(-mRadius / 10 * 5, -mRadius / 10 * 5, mRadius / 10 * 5, mRadius / 10 * 5)
         //计算每个项目所占的角度。360 度除以项目的数量，确保每个项目有相同的角度分布
-        mItemAnge = (360 / mItemStrs.size).toFloat()
+        mItemAnge = (360f / mItemStrs.size).toFloat()
         //根据转盘半径设置文本大小，确保文本相对于转盘的大小适中。文本大小是半径的 1/9
-        mTextSize = mRadius / 10
+        mTextSize = mRadius / 10f
 
         mPaintItemStr?.textSize = mTextSize
         //计算文本的偏移角度，将项目角度的一半赋值给 mOffsetAngle，用于文本绘制时的对齐，使文本在扇形的中间位置。
-        mOffsetAngle = mItemAnge / 2
+        mOffsetAngle = mItemAnge / 2f
     }
 
     fun startAnim() {
