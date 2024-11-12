@@ -122,13 +122,13 @@ class LuckyPan @JvmOverloads constructor(
 
         //支持传入item重新绘制 计算新的偏移角度
         if (items.isNotEmpty()) {
-            mOffsetAngle = (360 / items.size / 2).toFloat()
-            mItemAnge = (360 / items.size).toFloat() // 更新每个项的角度
+            mOffsetAngle = (360f / items.size / 2).toFloat()
+            mItemAnge = (360f / items.size).toFloat() // 更新每个项的角度
         }else{
-            mOffsetAngle = (360 / items.size / 2).toFloat()
+            mOffsetAngle = (360f / items.size / 2).toFloat()
         }
 
-        mOffsetAngle = (360 / items.size / 2).toFloat()
+        mOffsetAngle = (360f / items.size / 2).toFloat()
         invalidate()
     }
 
@@ -160,12 +160,12 @@ class LuckyPan @JvmOverloads constructor(
         objectAnimator?.cancel()
 
 
-        val targetAngle = mItemAnge * mLuckNum + mStartAngle % 360
+        val targetAngle = mItemAnge * mLuckNum + mStartAngle % 360f
         objectAnimator = ObjectAnimator.ofFloat(
             this,
             "rotation",
             mStartAngle,
-            mStartAngle - mRepeatCount * 360 - targetAngle
+            mStartAngle - mRepeatCount * 360f - targetAngle
         )
         objectAnimator?.setDuration(4000)
         objectAnimator?.addListener(object : AnimatorListenerAdapter() {
@@ -177,7 +177,7 @@ class LuckyPan @JvmOverloads constructor(
             }
         })
         objectAnimator?.start()
-        mStartAngle -= mRepeatCount * 360 + targetAngle
+        mStartAngle -= mRepeatCount * 360f + targetAngle
     }
 
     override fun onDraw(canvas: Canvas) {
